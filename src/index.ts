@@ -198,6 +198,19 @@ app.put(
   }
 );
 
+app.delete("/blogs/:id", (req: Request, res: Response) => {
+  let id: string = req.params.id;
+  let oneBlog = bd.blogs.find((p) => p.id === id);
+  if (oneBlog) {
+    bd.blogs = bd.blogs.filter((p) => p.id !== id);
+    res.send(204);
+  } else {
+    res.send(404);
+  }
+});
+
+
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
