@@ -405,6 +405,11 @@ app.delete("/posts/:id", (req, res) => {
         res.send(404);
     }
 });
+app.delete("/testing/all-data", (req, res) => {
+    bd.posts = [];
+    bd.blogs = [];
+    res.send(204);
+});
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
 });

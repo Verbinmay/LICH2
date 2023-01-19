@@ -412,6 +412,11 @@ app.delete("/posts/:id", (req: Request, res: Response) => {
   }
 });
 
+app.delete("/testing/all-data", (req: Request, res: Response) => {
+  bd.posts = [];
+  bd.blogs = [];
+  res.send(204);
+});
 
 
 app.listen(port, () => {
