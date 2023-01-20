@@ -1,3 +1,4 @@
+import { BADFAMILY } from "dns";
 import { Request, Response } from "express";
 import { Router } from "express";
 import { body } from "express-validator";
@@ -10,22 +11,34 @@ export const blogsRouter = Router({});
 
 const nameValidation = body("name")
   .isString()
+  .withMessage("Not name")
+  .bail()
   .trim()
   .notEmpty()
+  .withMessage("Name is empty")
+  .bail()
   .isLength({ max: 15 })
-  .withMessage("Title error");
+  .withMessage("Names length must be max 15");
 const descriptionValidation = body("description")
   .isString()
+  .withMessage("Isnt string")
+  .bail()
   .trim()
   .notEmpty()
+  .withMessage("Description is empty")
+  .bail()
   .isLength({ max: 500 })
-  .withMessage("Description error");
+  .withMessage("Description length must be max 500");
 const websiteUrlValidation = body("websiteUrl")
-  .isString()
+  .isURL()
+  .withMessage("Isnt URL")
+  .bail()
   .trim()
   .notEmpty()
-  .isLength({ min: 8 ,max: 100 })
-  .withMessage("WebsiteUrl error");
+  .withMessage("WebsiteURL is empty")
+  .bail()
+  .isLength({ max: 100 })
+  .withMessage("WebsiteUrl ength must be max 100");
 
 blogsRouter.get("/", (req: Request, res: Response) => {
   let foundBlogs = blogsRepository.findBlogs();

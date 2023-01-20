@@ -10,22 +10,34 @@ const avtorization_validation_middleware_1 = require("../middlewares/avtorizatio
 exports.postsRouter = (0, express_1.Router)({});
 const titleValidation = (0, express_validator_1.body)("title")
     .isString()
+    .withMessage("Title isnt string")
+    .bail()
     .trim()
     .notEmpty()
+    .withMessage("Title is empty")
+    .bail()
     .isLength({ max: 30 })
-    .withMessage("Title error");
+    .withMessage("Title length must be max 30");
 const shortDescriptionValidation = (0, express_validator_1.body)("shortDescription")
     .isString()
+    .withMessage("ShortDescription isnt string")
+    .bail()
     .trim()
     .notEmpty()
+    .withMessage("ShortDescription is empty")
+    .bail()
     .isLength({ max: 100 })
-    .withMessage("shortDescription error");
+    .withMessage("shortDescription length must be max 100");
 const contentValidation = (0, express_validator_1.body)("content")
     .isString()
+    .withMessage("content isnt string")
+    .bail()
     .trim()
     .notEmpty()
+    .withMessage("content is empty")
+    .bail()
     .isLength({ max: 1000 })
-    .withMessage("content error");
+    .withMessage("content length must be max 1000");
 const isBlogIdValidation = (0, express_validator_1.body)("blogId").custom((value) => {
     var _a;
     if (value !== ((_a = blogs_repository_1.blogsRepository.findBlogById(value)) === null || _a === void 0 ? void 0 : _a.id)) {

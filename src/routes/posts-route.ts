@@ -11,22 +11,34 @@ export const postsRouter = Router({});
 
 const titleValidation = body("title")
   .isString()
+  .withMessage("Title isnt string")
+  .bail()
   .trim()
   .notEmpty()
+  .withMessage("Title is empty")
+  .bail()
   .isLength({max: 30 })
-  .withMessage("Title error");
+  .withMessage("Title length must be max 30");
 const shortDescriptionValidation = body("shortDescription")
   .isString()
+  .withMessage("ShortDescription isnt string")
+  .bail()
   .trim()
   .notEmpty()
+  .withMessage("ShortDescription is empty")
+  .bail()
   .isLength({  max: 100 })
-  .withMessage("shortDescription error");
+  .withMessage("shortDescription length must be max 100");
 const contentValidation = body("content")
   .isString()
+  .withMessage("content isnt string")
+  .bail()
   .trim()
   .notEmpty()
+  .withMessage("content is empty")
+  .bail()
   .isLength({ max: 1000 })
-  .withMessage("content error");
+  .withMessage("content length must be max 1000");
 const isBlogIdValidation = body("blogId").custom((value) => {
   if (value !== blogsRepository.findBlogById(value)?.id) {
     throw new Error("Please insert existed user id");
