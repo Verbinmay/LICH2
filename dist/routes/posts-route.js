@@ -10,22 +10,19 @@ const avtorization_validation_middleware_1 = require("../middlewares/avtorizatio
 exports.postsRouter = (0, express_1.Router)({});
 const titleValidation = (0, express_validator_1.body)("title")
     .isString()
-    .withMessage("Title error")
     .trim()
     .isLength({ min: 1, max: 30 })
-    .withMessage("Write title less 30 letters");
+    .withMessage("Title error");
 const shortDescriptionValidation = (0, express_validator_1.body)("shortDescription")
     .isString()
-    .withMessage("shortDescription error")
     .trim()
     .isLength({ min: 1, max: 100 })
-    .withMessage("Write shortDescription less 100 letters");
+    .withMessage("shortDescription error");
 const contentValidation = (0, express_validator_1.body)("content")
     .isString()
-    .withMessage("content error")
     .trim()
     .isLength({ min: 1, max: 1000 })
-    .withMessage("Write content less 1000 letters");
+    .withMessage("content error");
 const isBlogIdValidation = (0, express_validator_1.body)("blogId").custom((value) => {
     var _a;
     if (value !== ((_a = blogs_repository_1.blogsRepository.findBlogById(value)) === null || _a === void 0 ? void 0 : _a.id)) {
@@ -43,7 +40,7 @@ exports.postsRouter.post("/", avtorization_validation_middleware_1.avtorizationV
 });
 exports.postsRouter.get("/:id", (req, res) => {
     let onePost = posts_repository_1.postsRepository.findPostById(req.params.id);
-    if (onePost) {
+    if (onePost !== undefined) {
         res.status(200).json(onePost);
     }
     else {

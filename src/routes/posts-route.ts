@@ -1,8 +1,8 @@
-import { request, Request, Response } from "express";
+import { Request, Response } from "express";
 import { Router } from "express";
 import { postsRepository } from "../repositories/posts-repository";
 import { PostInputModel } from "../types";
-import { body, header } from "express-validator";
+import { body } from "express-validator";
 import { inputValidationMiddleware } from "../middlewares/input-validation-middleware";
 import { blogsRepository } from "../repositories/blogs-repository";
 import { avtorizationValidationMiddleware } from "../middlewares/avtorization-validation-middleware";
@@ -11,22 +11,19 @@ export const postsRouter = Router({});
 
 const titleValidation = body("title")
   .isString()
-  .withMessage("Title error")
   .trim()
   .isLength({ min: 1, max: 30 })
-  .withMessage("Write title less 30 letters");
+  .withMessage("Title error");
 const shortDescriptionValidation = body("shortDescription")
   .isString()
-  .withMessage("shortDescription error")
   .trim()
   .isLength({ min: 1, max: 100 })
-  .withMessage("Write shortDescription less 100 letters");
+  .withMessage("shortDescription error");
 const contentValidation = body("content")
   .isString()
-  .withMessage("content error")
   .trim()
   .isLength({ min: 1, max: 1000 })
-  .withMessage("Write content less 1000 letters");
+  .withMessage("content error");
 const isBlogIdValidation = body("blogId").custom((value) => {
   if (value !== blogsRepository.findBlogById(value)?.id) {
     throw new Error("Please insert existed user id");
@@ -60,7 +57,7 @@ postsRouter.post(
 
 postsRouter.get("/:id", (req: Request, res: Response) => {
   let onePost = postsRepository.findPostById(req.params.id);
-  if (onePost) {
+  if (onePost !== undefined) {
     res.status(200).json(onePost);
   } else {
     res.send(404);

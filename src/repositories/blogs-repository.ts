@@ -1,7 +1,6 @@
 import { bd } from "../bd";
 import { ApiErrorResult, BlogViewModel } from "../types";
 
-
 let errorsMessages: ApiErrorResult = [];
 function message(a: string, b: string) {
   errorsMessages.push({
@@ -15,7 +14,6 @@ export const blogsRepository = {
     return bd.blogs;
   },
   createBlog(name: string, description: string, websiteUrl: string) {
-    errorsMessages = [];
 
     let isId: string = "";
     if (bd.blogs.length === 0) {
@@ -44,117 +42,59 @@ export const blogsRepository = {
       }
     }
 
-    let isName: string = "";
-    if (!name) {
-      message("Write name", "name");
-    } else if (typeof name !== "string") {
-      message("Please write string", "name");
-    } else if (name.length > 15) {
-      message("Write name less 15 letters", "name");
-    } else {
-      isName = name;
-    }
-
-    let isDescription: string = "";
-    if (!description) {
-      message("Write description", "description");
-    } else if (typeof description !== "string") {
-      message("Please write string", "description");
-    } else if (description.length > 500) {
-      message("Write description less 500 letters", "description");
-    } else {
-      isDescription = description;
-    }
-
     let isWebsiteUrl: string = "";
-    if (!websiteUrl) {
-      message("Write websiteUrl", "websiteUrl");
-    } else if (typeof websiteUrl !== "string") {
-      message("Please write websiteUrl like string", "websiteUrl");
-    } else if (websiteUrl.slice(0, 8) !== "https://") {
-      message("Please write websiteUrl (https://)", "websiteUrl");
-    } else if (websiteUrl.length > 100) {
-      message("Write websiteUrl less 100 letters", "websiteUrl");
-    } else {
-      isWebsiteUrl = websiteUrl;
-    }
+    // if (!websiteUrl) {
+    //   message("Write websiteUrl", "websiteUrl");
+    // } else if (typeof websiteUrl !== "string") {
+    //   message("Please write websiteUrl like string", "websiteUrl");
+    // } else if (websiteUrl.slice(0, 8) !== "https://") {
+    //   message("Please write websiteUrl (https://)", "websiteUrl");
+    // } else if (websiteUrl.length > 100) {
+    //   message("Write websiteUrl less 100 letters", "websiteUrl");
+    // } else {
+    isWebsiteUrl = websiteUrl;
+    // }
 
-    if (errorsMessages.length > 0) {
-      return [{ errorsMessages: errorsMessages }, false];
-    } else {
-      const createBlog: BlogViewModel = {
-        id: isId,
-        name: isName,
-        description: isDescription,
-        websiteUrl: isWebsiteUrl,
-      };
-      bd.blogs.push(createBlog);
-      return [createBlog, true];
-    }
+    const createBlog: BlogViewModel = {
+      id: isId,
+      name: name,
+      description: description,
+      websiteUrl: isWebsiteUrl,
+    };
+    bd.blogs.push(createBlog);
+    return createBlog;
   },
   findBlogById(id: string) {
     let oneBlog = bd.blogs.find((p) => p.id === id);
     return oneBlog;
   },
   updateBlog(
+    ddff:BlogViewModel,
     id: string,
     name: string,
     description: string,
     websiteUrl: string
   ) {
-    let oneBlog = bd.blogs.find((p) => p.id === id);
-    if (oneBlog) {
-      errorsMessages = [];
-      let isName: string = "";
-      if (!name) {
-        message("Write name", "name");
-      } else if (typeof name !== "string") {
-        message("Please write string", "name");
-      } else if (name.length > 15) {
-        message("Write name less 15 letters", "name");
-      } else {
-        isName = name;
-      }
-
-      let isDescription: string = "";
-      if (!description) {
-        message("Write description", "description");
-      } else if (typeof description !== "string") {
-        message("Please write string", "description");
-      } else if (description.length > 500) {
-        message("Write description less 500 letters", "description");
-      } else {
-        isDescription = description;
-      }
-
       let isWebsiteUrl: string = "";
-      if (!websiteUrl) {
-        message("Write websiteUrl", "websiteUrl");
-      } else if (typeof websiteUrl !== "string") {
-        message("Please write websiteUrl like string", "websiteUrl");
-      } else if (websiteUrl.slice(0, 8) !== "https://") {
-        message("Please write websiteUrl (https://)", "websiteUrl");
-      } else if (websiteUrl.length > 100) {
-        message("Write websiteUrl less 100 letters", "websiteUrl");
-      } else {
+      // if (!websiteUrl) {
+      //   message("Write websiteUrl", "websiteUrl");
+      // } else if (typeof websiteUrl !== "string") {
+      //   message("Please write websiteUrl like string", "websiteUrl");
+      // } else if (websiteUrl.slice(0, 8) !== "https://") {
+      //   message("Please write websiteUrl (https://)", "websiteUrl");
+      // } else if (websiteUrl.length > 100) {
+      //   message("Write websiteUrl less 100 letters", "websiteUrl");
+      // } else {
         isWebsiteUrl = websiteUrl;
-      }
-
-      if (errorsMessages.length > 0) {
-        return [400, { errorsMessages: errorsMessages }];
-      } else {
-        oneBlog.name = isName;
-        oneBlog.description = isDescription;
-        oneBlog.websiteUrl = isWebsiteUrl;
-        return [204];
-      }
-    } else {
-      return [404];
-    }
+      //}
+        ddff.name = name;
+        ddff.description = description;
+        ddff.websiteUrl = isWebsiteUrl;
+       
   },
   deleteblogs(id: string) {
     let oneBlog = bd.blogs.find((p) => p.id === id);
-    if (oneBlog) {
+    if (oneBlog !== undefined) {
       bd.blogs = bd.blogs.filter((p) => p.id !== id);
       return [204];
     } else {

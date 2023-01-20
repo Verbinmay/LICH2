@@ -1,30 +1,52 @@
 import { Request, Response } from "express";
 import { Router } from "express";
+import { body } from "express-validator";
 import { avtorizationValidationMiddleware } from "../middlewares/avtorization-validation-middleware";
+import { inputValidationMiddleware } from "../middlewares/input-validation-middleware";
 import { blogsRepository } from "../repositories/blogs-repository";
 import { BlogInputModel } from "../types";
-
+import { bd } from "../bd";
+import { on } from "events";
 
 export const blogsRouter = Router({});
+
+const nameValidation = body("name")
+  .isString()
+  .trim()
+  .isLength({ min: 1, max: 15 })
+  .withMessage("Title error");
+const descriptionValidation = body("description")
+  .isString()
+  .trim()
+  .isLength({ min: 1, max: 500 })
+  .withMessage("Description error");
+const websiteUrlValidation = body("websiteUrl")
+  .isURL()
+  .trim()
+  .isLength({ min: 1, max: 100 })
+  .withMessage("WebsiteUrl error");
 
 blogsRouter.get("/", (req: Request, res: Response) => {
   let foundBlogs = blogsRepository.findBlogs();
   res.status(200).json(foundBlogs);
 });
 
-blogsRouter.post("/",avtorizationValidationMiddleware, (req: Request<{}, {}, BlogInputModel>, res: Response) => {
-  let creatorsReturn = blogsRepository.createBlog(
-    req.body.name,
-    req.body.description,
-    req.body.websiteUrl
-  );
-
-  if (creatorsReturn[1] === false) {
-    res.status(400).json(creatorsReturn[0]);
-  } else {
-    res.status(201).json(creatorsReturn[0]);
+blogsRouter.post(
+  "/",
+  avtorizationValidationMiddleware,
+  nameValidation,
+  descriptionValidation,
+  websiteUrlValidation,
+  inputValidationMiddleware,
+  (req: Request<{}, {}, BlogInputModel>, res: Response) => {
+    let creatorsReturn = blogsRepository.createBlog(
+      req.body.name,
+      req.body.description,
+      req.body.websiteUrl
+    );
+    res.status(201).json(creatorsReturn);
   }
-});
+);
 
 blogsRouter.get("/:id", (req: Request, res: Response) => {
   let oneBlog = blogsRepository.findBlogById(req.params.id);
@@ -36,29 +58,35 @@ blogsRouter.get("/:id", (req: Request, res: Response) => {
 });
 
 blogsRouter.put(
-  "/:id", avtorizationValidationMiddleware,
+  "/:id",
+  avtorizationValidationMiddleware,nameValidation,descriptionValidation, websiteUrlValidation, inputValidationMiddleware,
   (req: Request<{ id: string }, {}, BlogInputModel>, res: Response) => {
-    let updatesReturn = blogsRepository.updateBlog(
+
+    let ddff= blogsRepository.findBlogById(req.params.id)
+    if(ddff !== undefined){
+    blogsRepository.updateBlog(
+      ddff,
       req.params.id,
       req.body.name,
       req.body.description,
       req.body.websiteUrl
     );
-    if (updatesReturn[0] === 400) {
-      res.status(400).json(updatesReturn[1]);
-    } else if (updatesReturn[0] === 204) {
+    res.send(204);}
+    else {
+      res.send(404);
+    }
+  }
+);
+
+blogsRouter.delete(
+  "/:id",
+  avtorizationValidationMiddleware,
+  (req: Request, res: Response) => {
+    let deletesReturn = blogsRepository.deleteblogs(req.params.id);
+    if ((deletesReturn[0] = 204)) {
       res.send(204);
     } else {
       res.send(404);
     }
   }
 );
-
-blogsRouter.delete("/:id", avtorizationValidationMiddleware,(req: Request, res: Response) => {
-  let deletesReturn = blogsRepository.deleteblogs(req.params.id);
-  if ((deletesReturn[0] = 204)) {
-    res.send(204);
-  } else {
-    res.send(404);
-  }
-});

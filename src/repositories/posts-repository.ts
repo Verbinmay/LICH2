@@ -89,7 +89,7 @@ export const postsRepository = {
   },
   deletePost(id: string) {
     let onePost = bd.posts.find((p) => p.id === id);
-    if (onePost) {
+    if (onePost!==undefined) {
       bd.posts = bd.posts.filter((p) => p.id !== id);
       return [204];
     } else {

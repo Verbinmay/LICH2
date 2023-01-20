@@ -14,7 +14,6 @@ exports.blogsRepository = {
         return bd_1.bd.blogs;
     },
     createBlog(name, description, websiteUrl) {
-        errorsMessages = [];
         let isId = "";
         if (bd_1.bd.blogs.length === 0) {
             isId = "0";
@@ -44,129 +43,51 @@ exports.blogsRepository = {
                 }
             }
         }
-        let isName = "";
-        if (!name) {
-            message("Write name", "name");
-        }
-        else if (typeof name !== "string") {
-            message("Please write string", "name");
-        }
-        else if (name.length > 15) {
-            message("Write name less 15 letters", "name");
-        }
-        else {
-            isName = name;
-        }
-        let isDescription = "";
-        if (!description) {
-            message("Write description", "description");
-        }
-        else if (typeof description !== "string") {
-            message("Please write string", "description");
-        }
-        else if (description.length > 500) {
-            message("Write description less 500 letters", "description");
-        }
-        else {
-            isDescription = description;
-        }
         let isWebsiteUrl = "";
-        if (!websiteUrl) {
-            message("Write websiteUrl", "websiteUrl");
-        }
-        else if (typeof websiteUrl !== "string") {
-            message("Please write websiteUrl like string", "websiteUrl");
-        }
-        else if (websiteUrl.slice(0, 8) !== "https://") {
-            message("Please write websiteUrl (https://)", "websiteUrl");
-        }
-        else if (websiteUrl.length > 100) {
-            message("Write websiteUrl less 100 letters", "websiteUrl");
-        }
-        else {
-            isWebsiteUrl = websiteUrl;
-        }
-        if (errorsMessages.length > 0) {
-            return [{ errorsMessages: errorsMessages }, false];
-        }
-        else {
-            const createBlog = {
-                id: isId,
-                name: isName,
-                description: isDescription,
-                websiteUrl: isWebsiteUrl,
-            };
-            bd_1.bd.blogs.push(createBlog);
-            return [createBlog, true];
-        }
+        // if (!websiteUrl) {
+        //   message("Write websiteUrl", "websiteUrl");
+        // } else if (typeof websiteUrl !== "string") {
+        //   message("Please write websiteUrl like string", "websiteUrl");
+        // } else if (websiteUrl.slice(0, 8) !== "https://") {
+        //   message("Please write websiteUrl (https://)", "websiteUrl");
+        // } else if (websiteUrl.length > 100) {
+        //   message("Write websiteUrl less 100 letters", "websiteUrl");
+        // } else {
+        isWebsiteUrl = websiteUrl;
+        // }
+        const createBlog = {
+            id: isId,
+            name: name,
+            description: description,
+            websiteUrl: isWebsiteUrl,
+        };
+        bd_1.bd.blogs.push(createBlog);
+        return createBlog;
     },
     findBlogById(id) {
         let oneBlog = bd_1.bd.blogs.find((p) => p.id === id);
         return oneBlog;
     },
-    updateBlog(id, name, description, websiteUrl) {
-        let oneBlog = bd_1.bd.blogs.find((p) => p.id === id);
-        if (oneBlog) {
-            errorsMessages = [];
-            let isName = "";
-            if (!name) {
-                message("Write name", "name");
-            }
-            else if (typeof name !== "string") {
-                message("Please write string", "name");
-            }
-            else if (name.length > 15) {
-                message("Write name less 15 letters", "name");
-            }
-            else {
-                isName = name;
-            }
-            let isDescription = "";
-            if (!description) {
-                message("Write description", "description");
-            }
-            else if (typeof description !== "string") {
-                message("Please write string", "description");
-            }
-            else if (description.length > 500) {
-                message("Write description less 500 letters", "description");
-            }
-            else {
-                isDescription = description;
-            }
-            let isWebsiteUrl = "";
-            if (!websiteUrl) {
-                message("Write websiteUrl", "websiteUrl");
-            }
-            else if (typeof websiteUrl !== "string") {
-                message("Please write websiteUrl like string", "websiteUrl");
-            }
-            else if (websiteUrl.slice(0, 8) !== "https://") {
-                message("Please write websiteUrl (https://)", "websiteUrl");
-            }
-            else if (websiteUrl.length > 100) {
-                message("Write websiteUrl less 100 letters", "websiteUrl");
-            }
-            else {
-                isWebsiteUrl = websiteUrl;
-            }
-            if (errorsMessages.length > 0) {
-                return [400, { errorsMessages: errorsMessages }];
-            }
-            else {
-                oneBlog.name = isName;
-                oneBlog.description = isDescription;
-                oneBlog.websiteUrl = isWebsiteUrl;
-                return [204];
-            }
-        }
-        else {
-            return [404];
-        }
+    updateBlog(ddff, id, name, description, websiteUrl) {
+        let isWebsiteUrl = "";
+        // if (!websiteUrl) {
+        //   message("Write websiteUrl", "websiteUrl");
+        // } else if (typeof websiteUrl !== "string") {
+        //   message("Please write websiteUrl like string", "websiteUrl");
+        // } else if (websiteUrl.slice(0, 8) !== "https://") {
+        //   message("Please write websiteUrl (https://)", "websiteUrl");
+        // } else if (websiteUrl.length > 100) {
+        //   message("Write websiteUrl less 100 letters", "websiteUrl");
+        // } else {
+        isWebsiteUrl = websiteUrl;
+        //}
+        ddff.name = name;
+        ddff.description = description;
+        ddff.websiteUrl = isWebsiteUrl;
     },
     deleteblogs(id) {
         let oneBlog = bd_1.bd.blogs.find((p) => p.id === id);
-        if (oneBlog) {
+        if (oneBlog !== undefined) {
             bd_1.bd.blogs = bd_1.bd.blogs.filter((p) => p.id !== id);
             return [204];
         }

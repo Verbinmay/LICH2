@@ -80,7 +80,7 @@ exports.postsRepository = {
     },
     deletePost(id) {
         let onePost = bd_1.bd.posts.find((p) => p.id === id);
-        if (onePost) {
+        if (onePost !== undefined) {
             bd_1.bd.posts = bd_1.bd.posts.filter((p) => p.id !== id);
             return [204];
         }
