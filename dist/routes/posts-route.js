@@ -11,17 +11,17 @@ exports.postsRouter = (0, express_1.Router)({});
 const titleValidation = (0, express_validator_1.body)("title")
     .isString()
     .trim()
-    .isLength({ min: 1, max: 30 })
+    .isLength({ max: 30 })
     .withMessage("Title error");
 const shortDescriptionValidation = (0, express_validator_1.body)("shortDescription")
     .isString()
     .trim()
-    .isLength({ min: 1, max: 100 })
+    .isLength({ max: 100 })
     .withMessage("shortDescription error");
 const contentValidation = (0, express_validator_1.body)("content")
     .isString()
     .trim()
-    .isLength({ min: 1, max: 1000 })
+    .isLength({ max: 1000 })
     .withMessage("content error");
 const isBlogIdValidation = (0, express_validator_1.body)("blogId").custom((value) => {
     var _a;

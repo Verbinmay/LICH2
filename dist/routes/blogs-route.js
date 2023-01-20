@@ -10,17 +10,17 @@ exports.blogsRouter = (0, express_1.Router)({});
 const nameValidation = (0, express_validator_1.body)("name")
     .isString()
     .trim()
-    .isLength({ min: 1, max: 15 })
+    .isLength({ max: 15 })
     .withMessage("Title error");
 const descriptionValidation = (0, express_validator_1.body)("description")
     .isString()
     .trim()
-    .isLength({ min: 1, max: 500 })
+    .isLength({ max: 500 })
     .withMessage("Description error");
 const websiteUrlValidation = (0, express_validator_1.body)("websiteUrl")
     .isURL()
     .trim()
-    .isLength({ min: 1, max: 100 })
+    .isLength({ max: 100 })
     .withMessage("WebsiteUrl error");
 exports.blogsRouter.get("/", (req, res) => {
     let foundBlogs = blogs_repository_1.blogsRepository.findBlogs();
@@ -51,7 +51,7 @@ exports.blogsRouter.put("/:id", avtorization_validation_middleware_1.avtorizatio
 });
 exports.blogsRouter.delete("/:id", avtorization_validation_middleware_1.avtorizationValidationMiddleware, (req, res) => {
     let deletesReturn = blogs_repository_1.blogsRepository.deleteblogs(req.params.id);
-    if ((deletesReturn[0] = 204)) {
+    if ((deletesReturn[0] === 204)) {
         res.send(204);
     }
     else {

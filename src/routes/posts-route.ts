@@ -12,17 +12,17 @@ export const postsRouter = Router({});
 const titleValidation = body("title")
   .isString()
   .trim()
-  .isLength({ min: 1, max: 30 })
+  .isLength({max: 30 })
   .withMessage("Title error");
 const shortDescriptionValidation = body("shortDescription")
   .isString()
   .trim()
-  .isLength({ min: 1, max: 100 })
+  .isLength({  max: 100 })
   .withMessage("shortDescription error");
 const contentValidation = body("content")
   .isString()
   .trim()
-  .isLength({ min: 1, max: 1000 })
+  .isLength({ max: 1000 })
   .withMessage("content error");
 const isBlogIdValidation = body("blogId").custom((value) => {
   if (value !== blogsRepository.findBlogById(value)?.id) {

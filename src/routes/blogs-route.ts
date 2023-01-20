@@ -5,25 +5,23 @@ import { avtorizationValidationMiddleware } from "../middlewares/avtorization-va
 import { inputValidationMiddleware } from "../middlewares/input-validation-middleware";
 import { blogsRepository } from "../repositories/blogs-repository";
 import { BlogInputModel } from "../types";
-import { bd } from "../bd";
-import { on } from "events";
 
 export const blogsRouter = Router({});
 
 const nameValidation = body("name")
   .isString()
   .trim()
-  .isLength({ min: 1, max: 15 })
+  .isLength({ max: 15 })
   .withMessage("Title error");
 const descriptionValidation = body("description")
   .isString()
   .trim()
-  .isLength({ min: 1, max: 500 })
+  .isLength({ max: 500 })
   .withMessage("Description error");
 const websiteUrlValidation = body("websiteUrl")
   .isURL()
   .trim()
-  .isLength({ min: 1, max: 100 })
+  .isLength({ max: 100 })
   .withMessage("WebsiteUrl error");
 
 blogsRouter.get("/", (req: Request, res: Response) => {
@@ -83,7 +81,7 @@ blogsRouter.delete(
   avtorizationValidationMiddleware,
   (req: Request, res: Response) => {
     let deletesReturn = blogsRepository.deleteblogs(req.params.id);
-    if ((deletesReturn[0] = 204)) {
+    if ((deletesReturn[0] === 204)) {
       res.send(204);
     } else {
       res.send(404);
