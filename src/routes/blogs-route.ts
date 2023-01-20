@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Router } from "express";
+import { avtorizationValidationMiddleware } from "../middlewares/avtorization-validation-middleware";
 import { blogsRepository } from "../repositories/blogs-repository";
 import { BlogInputModel } from "../types";
 
@@ -11,7 +12,7 @@ blogsRouter.get("/", (req: Request, res: Response) => {
   res.status(200).json(foundBlogs);
 });
 
-blogsRouter.post("/", (req: Request<{}, {}, BlogInputModel>, res: Response) => {
+blogsRouter.post("/",avtorizationValidationMiddleware, (req: Request<{}, {}, BlogInputModel>, res: Response) => {
   let creatorsReturn = blogsRepository.createBlog(
     req.body.name,
     req.body.description,
@@ -35,7 +36,7 @@ blogsRouter.get("/:id", (req: Request, res: Response) => {
 });
 
 blogsRouter.put(
-  "/:id",
+  "/:id", avtorizationValidationMiddleware,
   (req: Request<{ id: string }, {}, BlogInputModel>, res: Response) => {
     let updatesReturn = blogsRepository.updateBlog(
       req.params.id,
@@ -53,7 +54,7 @@ blogsRouter.put(
   }
 );
 
-blogsRouter.delete("/:id", (req: Request, res: Response) => {
+blogsRouter.delete("/:id", avtorizationValidationMiddleware,(req: Request, res: Response) => {
   let deletesReturn = blogsRepository.deleteblogs(req.params.id);
   if ((deletesReturn[0] = 204)) {
     res.send(204);
