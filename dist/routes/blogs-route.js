@@ -10,17 +10,20 @@ exports.blogsRouter = (0, express_1.Router)({});
 const nameValidation = (0, express_validator_1.body)("name")
     .isString()
     .trim()
+    .notEmpty()
     .isLength({ max: 15 })
     .withMessage("Title error");
 const descriptionValidation = (0, express_validator_1.body)("description")
     .isString()
     .trim()
+    .notEmpty()
     .isLength({ max: 500 })
     .withMessage("Description error");
 const websiteUrlValidation = (0, express_validator_1.body)("websiteUrl")
-    .isURL()
+    .isString()
     .trim()
-    .isLength({ max: 100 })
+    .notEmpty()
+    .isLength({ min: 8, max: 100 })
     .withMessage("WebsiteUrl error");
 exports.blogsRouter.get("/", (req, res) => {
     let foundBlogs = blogs_repository_1.blogsRepository.findBlogs();

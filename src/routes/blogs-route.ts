@@ -11,17 +11,20 @@ export const blogsRouter = Router({});
 const nameValidation = body("name")
   .isString()
   .trim()
+  .notEmpty()
   .isLength({ max: 15 })
   .withMessage("Title error");
 const descriptionValidation = body("description")
   .isString()
   .trim()
+  .notEmpty()
   .isLength({ max: 500 })
   .withMessage("Description error");
 const websiteUrlValidation = body("websiteUrl")
-  .isURL()
+  .isString()
   .trim()
-  .isLength({ max: 100 })
+  .notEmpty()
+  .isLength({ min: 8 ,max: 100 })
   .withMessage("WebsiteUrl error");
 
 blogsRouter.get("/", (req: Request, res: Response) => {
