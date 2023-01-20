@@ -39,8 +39,8 @@ postsRouter.get("/", (req: Request, res: Response) => {
 postsRouter.post(
   "/",
   avtorizationValidationMiddleware,
-  titleValidation,
   shortDescriptionValidation,
+  titleValidation,
   contentValidation,
   isBlogIdValidation,
   inputValidationMiddleware,
@@ -67,8 +67,8 @@ postsRouter.get("/:id", (req: Request, res: Response) => {
 postsRouter.put(
   "/:id",
   avtorizationValidationMiddleware,
-  titleValidation,
   shortDescriptionValidation,
+  titleValidation,
   contentValidation,
   isBlogIdValidation,
   inputValidationMiddleware,

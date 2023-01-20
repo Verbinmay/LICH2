@@ -26,7 +26,7 @@ exports.blogsRouter.get("/", (req, res) => {
     let foundBlogs = blogs_repository_1.blogsRepository.findBlogs();
     res.status(200).json(foundBlogs);
 });
-exports.blogsRouter.post("/", avtorization_validation_middleware_1.avtorizationValidationMiddleware, nameValidation, descriptionValidation, websiteUrlValidation, input_validation_middleware_1.inputValidationMiddleware, (req, res) => {
+exports.blogsRouter.post("/", avtorization_validation_middleware_1.avtorizationValidationMiddleware, websiteUrlValidation, nameValidation, descriptionValidation, input_validation_middleware_1.inputValidationMiddleware, (req, res) => {
     let creatorsReturn = blogs_repository_1.blogsRepository.createBlog(req.body.name, req.body.description, req.body.websiteUrl);
     res.status(201).json(creatorsReturn);
 });
@@ -39,7 +39,7 @@ exports.blogsRouter.get("/:id", (req, res) => {
         res.send(404);
     }
 });
-exports.blogsRouter.put("/:id", avtorization_validation_middleware_1.avtorizationValidationMiddleware, nameValidation, descriptionValidation, websiteUrlValidation, input_validation_middleware_1.inputValidationMiddleware, (req, res) => {
+exports.blogsRouter.put("/:id", avtorization_validation_middleware_1.avtorizationValidationMiddleware, websiteUrlValidation, nameValidation, descriptionValidation, input_validation_middleware_1.inputValidationMiddleware, (req, res) => {
     let ddff = blogs_repository_1.blogsRepository.findBlogById(req.params.id);
     if (ddff !== undefined) {
         blogs_repository_1.blogsRepository.updateBlog(ddff, req.params.id, req.body.name, req.body.description, req.body.websiteUrl);
@@ -51,7 +51,7 @@ exports.blogsRouter.put("/:id", avtorization_validation_middleware_1.avtorizatio
 });
 exports.blogsRouter.delete("/:id", avtorization_validation_middleware_1.avtorizationValidationMiddleware, (req, res) => {
     let deletesReturn = blogs_repository_1.blogsRepository.deleteblogs(req.params.id);
-    if ((deletesReturn[0] === 204)) {
+    if (deletesReturn[0] === 204) {
         res.send(204);
     }
     else {

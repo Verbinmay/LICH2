@@ -34,7 +34,7 @@ exports.postsRouter.get("/", (req, res) => {
     let foundPosts = posts_repository_1.postsRepository.findPosts();
     res.status(200).json(foundPosts);
 });
-exports.postsRouter.post("/", avtorization_validation_middleware_1.avtorizationValidationMiddleware, titleValidation, shortDescriptionValidation, contentValidation, isBlogIdValidation, input_validation_middleware_1.inputValidationMiddleware, (req, res) => {
+exports.postsRouter.post("/", avtorization_validation_middleware_1.avtorizationValidationMiddleware, shortDescriptionValidation, titleValidation, contentValidation, isBlogIdValidation, input_validation_middleware_1.inputValidationMiddleware, (req, res) => {
     const creatersReturn = posts_repository_1.postsRepository.createPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);
     res.status(201).json(creatersReturn);
 });
@@ -47,7 +47,7 @@ exports.postsRouter.get("/:id", (req, res) => {
         res.send(404);
     }
 });
-exports.postsRouter.put("/:id", avtorization_validation_middleware_1.avtorizationValidationMiddleware, titleValidation, shortDescriptionValidation, contentValidation, isBlogIdValidation, input_validation_middleware_1.inputValidationMiddleware, (req, res) => {
+exports.postsRouter.put("/:id", avtorization_validation_middleware_1.avtorizationValidationMiddleware, shortDescriptionValidation, titleValidation, contentValidation, isBlogIdValidation, input_validation_middleware_1.inputValidationMiddleware, (req, res) => {
     let bbcc = posts_repository_1.postsRepository.findPostById(req.params.id);
     if (bbcc !== undefined) {
         posts_repository_1.postsRepository.updatePost(bbcc, req.params.id, req.body.title, req.body.shortDescription, req.body.content, req.body.blogId);

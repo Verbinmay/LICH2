@@ -14,7 +14,7 @@ export const inputValidationMiddleware = (
         field: a.param,
       };
     });
-    res.status(400).json({ errors: newErorsArray });
+    res.status(400).json({ errorsMessages: newErorsArray });
   } else {
     next();
   }

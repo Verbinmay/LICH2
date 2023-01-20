@@ -32,9 +32,9 @@ blogsRouter.get("/", (req: Request, res: Response) => {
 blogsRouter.post(
   "/",
   avtorizationValidationMiddleware,
+  websiteUrlValidation,
   nameValidation,
   descriptionValidation,
-  websiteUrlValidation,
   inputValidationMiddleware,
   (req: Request<{}, {}, BlogInputModel>, res: Response) => {
     let creatorsReturn = blogsRepository.createBlog(
@@ -57,20 +57,23 @@ blogsRouter.get("/:id", (req: Request, res: Response) => {
 
 blogsRouter.put(
   "/:id",
-  avtorizationValidationMiddleware,nameValidation,descriptionValidation, websiteUrlValidation, inputValidationMiddleware,
+  avtorizationValidationMiddleware,
+  websiteUrlValidation,
+  nameValidation,
+  descriptionValidation,
+  inputValidationMiddleware,
   (req: Request<{ id: string }, {}, BlogInputModel>, res: Response) => {
-
-    let ddff= blogsRepository.findBlogById(req.params.id)
-    if(ddff !== undefined){
-    blogsRepository.updateBlog(
-      ddff,
-      req.params.id,
-      req.body.name,
-      req.body.description,
-      req.body.websiteUrl
-    );
-    res.send(204);}
-    else {
+    let ddff = blogsRepository.findBlogById(req.params.id);
+    if (ddff !== undefined) {
+      blogsRepository.updateBlog(
+        ddff,
+        req.params.id,
+        req.body.name,
+        req.body.description,
+        req.body.websiteUrl
+      );
+      res.send(204);
+    } else {
       res.send(404);
     }
   }
@@ -81,7 +84,7 @@ blogsRouter.delete(
   avtorizationValidationMiddleware,
   (req: Request, res: Response) => {
     let deletesReturn = blogsRepository.deleteblogs(req.params.id);
-    if ((deletesReturn[0] === 204)) {
+    if (deletesReturn[0] === 204) {
       res.send(204);
     } else {
       res.send(404);
