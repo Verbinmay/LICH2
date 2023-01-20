@@ -1,11 +1,11 @@
-import { Request, Response } from "express";
+import { request, Request, Response } from "express";
 import { Router } from "express";
 import { postsRepository } from "../repositories/posts-repository";
 import { PostInputModel } from "../types";
-import { body } from "express-validator";
+import { body, header } from "express-validator";
 import { inputValidationMiddleware } from "../middlewares/input-validation-middleware";
-import { bd } from "../bd";
 import { blogsRepository } from "../repositories/blogs-repository";
+import { avtorizationValidationMiddleware } from "../middlewares/avtorization-validation-middleware";
 
 export const postsRouter = Router({});
 
@@ -27,13 +27,12 @@ const contentValidation = body("content")
   .trim()
   .isLength({ min: 1, max: 1000 })
   .withMessage("Write content less 1000 letters");
-const isBlogIdValidation = body("isBlogId").custom((value) => {
+const isBlogIdValidation = body("blogId").custom((value) => {
   if (value !== blogsRepository.findBlogById(value)?.id) {
     throw new Error("Please insert existed user id");
   }
   return true;
 });
-
 
 postsRouter.get("/", (req: Request, res: Response) => {
   let foundPosts = postsRepository.findPosts();
@@ -42,6 +41,7 @@ postsRouter.get("/", (req: Request, res: Response) => {
 
 postsRouter.post(
   "/",
+  avtorizationValidationMiddleware,
   titleValidation,
   shortDescriptionValidation,
   contentValidation,
@@ -54,11 +54,7 @@ postsRouter.post(
       req.body.content,
       req.body.blogId
     );
-    if (creatersReturn[0] === 400) {
-      res.status(400).json(creatersReturn[1]);
-    } else {
-      res.status(201).json(creatersReturn[1]);
-    }
+    res.status(201).json(creatersReturn);
   }
 );
 
@@ -73,17 +69,23 @@ postsRouter.get("/:id", (req: Request, res: Response) => {
 
 postsRouter.put(
   "/:id",
+  avtorizationValidationMiddleware,
+  titleValidation,
+  shortDescriptionValidation,
+  contentValidation,
+  isBlogIdValidation,
+  inputValidationMiddleware,
   (req: Request<{ id: string }, {}, PostInputModel>, res: Response) => {
-    const updatesRetern = postsRepository.updatePost(
-      req.params.id,
-      req.body.title,
-      req.body.shortDescription,
-      req.body.content,
-      req.body.blogId
-    );
-    if (updatesRetern[0] === 400) {
-      res.status(400).json(updatesRetern[1]);
-    } else if (updatesRetern[0] === 204) {
+    let bbcc = postsRepository.findPostById(req.params.id);
+    if (bbcc !== undefined) {
+      postsRepository.updatePost(
+        bbcc,
+        req.params.id,
+        req.body.title,
+        req.body.shortDescription,
+        req.body.content,
+        req.body.blogId
+      );
       res.send(204);
     } else {
       res.send(404);
@@ -91,11 +93,15 @@ postsRouter.put(
   }
 );
 
-postsRouter.delete("/:id", (req: Request, res: Response) => {
-  let deletesReturn = postsRepository.deletePost(req.params.id);
-  if (deletesReturn[0] === 204) {
-    res.send(204);
-  } else {
-    res.send(404);
+postsRouter.delete(
+  "/:id",
+  avtorizationValidationMiddleware,
+  (req: Request, res: Response) => {
+    let deletesReturn = postsRepository.deletePost(req.params.id);
+    if (deletesReturn[0] === 204) {
+      res.send(204);
+    } else {
+      res.send(404);
+    }
   }
-});
+);

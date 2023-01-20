@@ -1,5 +1,6 @@
 import { bd } from "../bd";
 import { ApiErrorResult, PostViewModel } from "../types";
+import { blogsRepository } from "./blogs-repository";
 
 let errorsMessages: ApiErrorResult = [];
 function message(a: string, b: string) {
@@ -19,8 +20,6 @@ export const postsRepository = {
     content: string,
     blogId: string
   ) {
-    errorsMessages = [];
-
     let isId: string = "";
     if (bd.posts.length === 0) {
       isId = "0";
@@ -47,158 +46,46 @@ export const postsRepository = {
         }
       }
     }
-
-    let isTitle: string = "";
-    if (!title) {
-      message("Write title", "title");
-    } else if (typeof title !== "string") {
-      message("Please write string", "title");
-    } else if (title.length > 30) {
-      message("Write title less 30 letters", "title");
-    } else {
-      isTitle = title;
-    }
-
-    let isShortDescription: string = "";
-    if (!shortDescription) {
-      message("Write shortDescription", "shortDescription");
-    } else if (typeof shortDescription !== "string") {
-      message("Please write string", "shortDescription");
-    } else if (shortDescription.length > 100) {
-      message("Write shortDescription less 100 letters", "shortDescription");
-    } else {
-      isShortDescription = shortDescription;
-    }
-
-    let isContent: string = "";
-    if (!content) {
-      message("Write content", "content");
-    } else if (typeof content !== "string") {
-      message("Please write content like string", "content");
-    } else if (content.length > 1000) {
-      message("Write content less 1000 letters", "content");
-    } else {
-      isContent = content;
-    }
-    let g: boolean = false;
     let isBlogName: string = "";
-
-    for (let aa = 0; aa < bd.blogs.length; aa++) {
-      if (blogId === bd.blogs[aa].id) {
-        g = true;
-        isBlogName = bd.blogs[aa].name;
-        break;
-      }
+    let aabb = blogsRepository.findBlogById(blogId)?.name;
+    if (aabb !== undefined) {
+      isBlogName = aabb;
     }
-
-    let isBlogId: string = "";
-    if (!blogId) {
-      message("Write blogId", "blogId");
-    } else if (typeof blogId !== "string") {
-      message("Please write blogId like string", "blogId");
-    } else if (g === false) {
-      message("Please insert existed user id", "blogId");
-    } else {
-      isBlogId = blogId;
-    }
-
-    if (errorsMessages.length > 0) {
-      return [400, { errorsMessages: errorsMessages }];
-    } else {
-      const createPost: PostViewModel = {
-        id: isId,
-        title: isTitle,
-        shortDescription: isShortDescription,
-        content: isContent,
-        blogId: isBlogId,
-        blogName: isBlogName,
-      };
-      bd.posts.push(createPost);
-      return [201, createPost];
-    }
+    const createPost: PostViewModel = {
+      id: isId,
+      title: title,
+      shortDescription: shortDescription,
+      content: content,
+      blogId: blogId,
+      blogName: isBlogName,
+    };
+    bd.posts.push(createPost);
+    return createPost;
   },
+
   findPostById(id: string) {
     let onePost = bd.posts.find((p) => p.id === id);
     return onePost;
   },
   updatePost(
+    bbcc: PostViewModel,
     id: string,
     title: string,
     shortDescription: string,
     content: string,
     blogId: string
   ) {
-    let onePost = bd.posts.find((p) => p.id === id);
-    if (onePost) {
-      errorsMessages = [];
-
-      let isTitle: string = "";
-      if (!title) {
-        message("Write title", "title");
-      } else if (typeof title !== "string") {
-        message("Please write string", "title");
-      } else if (title.length > 30) {
-        message("Write title less 30 letters", "title");
-      } else {
-        isTitle = title;
-      }
-
-      let isShortDescription: string = "";
-      if (!shortDescription) {
-        message("Write shortDescription", "shortDescription");
-      } else if (typeof shortDescription !== "string") {
-        message("Please write string", "shortDescription");
-      } else if (shortDescription.length > 100) {
-        message("Write shortDescription less 100 letters", "shortDescription");
-      } else {
-        isShortDescription = shortDescription;
-      }
-
-      let isContent: string = "";
-      if (!content) {
-        message("Write content", "content");
-      } else if (typeof content !== "string") {
-        message("Please write content like string", "content");
-      } else if (content.length > 1000) {
-        message("Write content less 1000 letters", "content");
-      } else {
-        isContent = content;
-      }
-      let g: boolean = false;
-      let isBlogName: string = "";
-
-      for (let aa = 0; aa < bd.blogs.length; aa++) {
-        if (blogId === bd.blogs[aa].id) {
-          g = true;
-          isBlogName = bd.blogs[aa].name;
-          break;
-        }
-      }
-
-      let isBlogId: string = "";
-      if (!blogId) {
-        message("Write blogId", "blogId");
-      } else if (typeof blogId !== "string") {
-        message("Please write blogId like string", "blogId");
-      } else if (g === false) {
-        message("Please insert existed user id", "blogId");
-      } else {
-        isBlogId = blogId;
-      }
-
-      if (errorsMessages.length > 0) {
-        return [400, { errorsMessages: errorsMessages }];
-      } else {
-        onePost.title = isTitle;
-        onePost.shortDescription = isShortDescription;
-        onePost.content = isContent;
-        onePost.blogId = isBlogId;
-        onePost.blogName = isBlogName;
-        return [204];
-      }
-    } else {
-      return [404];
+    let isBlogName: string = "";
+    let aabb = blogsRepository.findBlogById(blogId)?.name;
+    if (aabb !== undefined) {
+      isBlogName = aabb;
     }
+    bbcc.title = title;
+    bbcc.shortDescription = shortDescription;
+    bbcc.content = content;
+    bbcc.blogId = blogId;
+    bbcc.blogName = isBlogName;
+    
   },
   deletePost(id: string) {
     let onePost = bd.posts.find((p) => p.id === id);

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postsRepository = void 0;
 const bd_1 = require("../bd");
+const blogs_repository_1 = require("./blogs-repository");
 let errorsMessages = [];
 function message(a, b) {
     errorsMessages.push({
@@ -14,7 +15,7 @@ exports.postsRepository = {
         return bd_1.bd.posts;
     },
     createPost(title, shortDescription, content, blogId) {
-        errorsMessages = [];
+        var _a;
         let isId = "";
         if (bd_1.bd.posts.length === 0) {
             isId = "0";
@@ -44,167 +45,38 @@ exports.postsRepository = {
                 }
             }
         }
-        let isTitle = "";
-        if (!title) {
-            message("Write title", "title");
-        }
-        else if (typeof title !== "string") {
-            message("Please write string", "title");
-        }
-        else if (title.length > 30) {
-            message("Write title less 30 letters", "title");
-        }
-        else {
-            isTitle = title;
-        }
-        let isShortDescription = "";
-        if (!shortDescription) {
-            message("Write shortDescription", "shortDescription");
-        }
-        else if (typeof shortDescription !== "string") {
-            message("Please write string", "shortDescription");
-        }
-        else if (shortDescription.length > 100) {
-            message("Write shortDescription less 100 letters", "shortDescription");
-        }
-        else {
-            isShortDescription = shortDescription;
-        }
-        let isContent = "";
-        if (!content) {
-            message("Write content", "content");
-        }
-        else if (typeof content !== "string") {
-            message("Please write content like string", "content");
-        }
-        else if (content.length > 1000) {
-            message("Write content less 1000 letters", "content");
-        }
-        else {
-            isContent = content;
-        }
-        let g = false;
         let isBlogName = "";
-        for (let aa = 0; aa < bd_1.bd.blogs.length; aa++) {
-            if (blogId === bd_1.bd.blogs[aa].id) {
-                g = true;
-                isBlogName = bd_1.bd.blogs[aa].name;
-                break;
-            }
+        let aabb = (_a = blogs_repository_1.blogsRepository.findBlogById(blogId)) === null || _a === void 0 ? void 0 : _a.name;
+        if (aabb !== undefined) {
+            isBlogName = aabb;
         }
-        let isBlogId = "";
-        if (!blogId) {
-            message("Write blogId", "blogId");
-        }
-        else if (typeof blogId !== "string") {
-            message("Please write blogId like string", "blogId");
-        }
-        else if (g === false) {
-            message("Please insert existed user id", "blogId");
-        }
-        else {
-            isBlogId = blogId;
-        }
-        if (errorsMessages.length > 0) {
-            return [400, { errorsMessages: errorsMessages }];
-        }
-        else {
-            const createPost = {
-                id: isId,
-                title: isTitle,
-                shortDescription: isShortDescription,
-                content: isContent,
-                blogId: isBlogId,
-                blogName: isBlogName,
-            };
-            bd_1.bd.posts.push(createPost);
-            return [201, createPost];
-        }
+        const createPost = {
+            id: isId,
+            title: title,
+            shortDescription: shortDescription,
+            content: content,
+            blogId: blogId,
+            blogName: isBlogName,
+        };
+        bd_1.bd.posts.push(createPost);
+        return createPost;
     },
     findPostById(id) {
         let onePost = bd_1.bd.posts.find((p) => p.id === id);
         return onePost;
     },
-    updatePost(id, title, shortDescription, content, blogId) {
-        let onePost = bd_1.bd.posts.find((p) => p.id === id);
-        if (onePost) {
-            errorsMessages = [];
-            let isTitle = "";
-            if (!title) {
-                message("Write title", "title");
-            }
-            else if (typeof title !== "string") {
-                message("Please write string", "title");
-            }
-            else if (title.length > 30) {
-                message("Write title less 30 letters", "title");
-            }
-            else {
-                isTitle = title;
-            }
-            let isShortDescription = "";
-            if (!shortDescription) {
-                message("Write shortDescription", "shortDescription");
-            }
-            else if (typeof shortDescription !== "string") {
-                message("Please write string", "shortDescription");
-            }
-            else if (shortDescription.length > 100) {
-                message("Write shortDescription less 100 letters", "shortDescription");
-            }
-            else {
-                isShortDescription = shortDescription;
-            }
-            let isContent = "";
-            if (!content) {
-                message("Write content", "content");
-            }
-            else if (typeof content !== "string") {
-                message("Please write content like string", "content");
-            }
-            else if (content.length > 1000) {
-                message("Write content less 1000 letters", "content");
-            }
-            else {
-                isContent = content;
-            }
-            let g = false;
-            let isBlogName = "";
-            for (let aa = 0; aa < bd_1.bd.blogs.length; aa++) {
-                if (blogId === bd_1.bd.blogs[aa].id) {
-                    g = true;
-                    isBlogName = bd_1.bd.blogs[aa].name;
-                    break;
-                }
-            }
-            let isBlogId = "";
-            if (!blogId) {
-                message("Write blogId", "blogId");
-            }
-            else if (typeof blogId !== "string") {
-                message("Please write blogId like string", "blogId");
-            }
-            else if (g === false) {
-                message("Please insert existed user id", "blogId");
-            }
-            else {
-                isBlogId = blogId;
-            }
-            if (errorsMessages.length > 0) {
-                return [400, { errorsMessages: errorsMessages }];
-            }
-            else {
-                onePost.title = isTitle;
-                onePost.shortDescription = isShortDescription;
-                onePost.content = isContent;
-                onePost.blogId = isBlogId;
-                onePost.blogName = isBlogName;
-                return [204];
-            }
+    updatePost(bbcc, id, title, shortDescription, content, blogId) {
+        var _a;
+        let isBlogName = "";
+        let aabb = (_a = blogs_repository_1.blogsRepository.findBlogById(blogId)) === null || _a === void 0 ? void 0 : _a.name;
+        if (aabb !== undefined) {
+            isBlogName = aabb;
         }
-        else {
-            return [404];
-        }
+        bbcc.title = title;
+        bbcc.shortDescription = shortDescription;
+        bbcc.content = content;
+        bbcc.blogId = blogId;
+        bbcc.blogName = isBlogName;
     },
     deletePost(id) {
         let onePost = bd_1.bd.posts.find((p) => p.id === id);
